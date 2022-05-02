@@ -1,25 +1,28 @@
-import logo from './logo.svg';
-import './App.css';
+import { lazy, Suspense } from "react";
+import { BrowserRouter } from "react-router-dom";
+import { useAuth } from "./auth";
+import Layout from "./Layout";
+import Loader from "./Loader";
+import ThemeProvider from "./theme";
 
-function App() {
+const Pages = lazy(() => import("./pages"));
+
+export default function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+      <ThemeProvider>
+        <Layout>
+          <Suspense fallback={<Loader />}>
+            <Main />
+          </Suspense>
+        </Layout>
+      </ThemeProvider>
+    </BrowserRouter>
   );
 }
 
-export default App;
+function Main() {
+  const { loading } = useAuth();
+
+  return loading ? <Loader /> : <Pages />;
+}
