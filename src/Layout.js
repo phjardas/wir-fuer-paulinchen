@@ -1,4 +1,5 @@
 import {
+  Link,
   AppBar,
   Box,
   Button,
@@ -7,7 +8,7 @@ import {
   Typography,
 } from "@mui/material";
 import { signOut } from "firebase/auth";
-import { Link } from "react-router-dom";
+import { Link as RouterLink } from "react-router-dom";
 import { useAuth } from "./auth";
 import { auth } from "./firebase";
 
@@ -16,11 +17,11 @@ export default function Layout({ children }) {
 
   return (
     <>
-      <AppBar elevation={0}>
-        <Container>
+      <AppBar elevation={0} color="grey">
+        <Container maxWidth="sm">
           <Toolbar disableGutters>
             <Typography
-              component={Link}
+              component={RouterLink}
               to="/"
               variant="h6"
               color="inherit"
@@ -30,12 +31,10 @@ export default function Layout({ children }) {
             </Typography>
             {authenticated && (
               <Box sx={{ ml: "auto" }}>
-                <Button component={Link} to="/admin" variant="contained">
+                <Button component={RouterLink} to="/admin">
                   Admin
                 </Button>
-                <Button variant="contained" onClick={() => signOut(auth)}>
-                  abmelden
-                </Button>
+                <Button onClick={() => signOut(auth)}>abmelden</Button>
               </Box>
             )}
           </Toolbar>
@@ -43,9 +42,31 @@ export default function Layout({ children }) {
       </AppBar>
       <Container
         component="main"
+        maxWidth="sm"
         sx={{ mt: { xs: "56px", sm: "64px" }, py: 4 }}
       >
         {children}
+      </Container>
+      <Container component="footer" maxWidth="sm">
+        <Box
+          component={Typography}
+          variant="caption"
+          color="textSecondary"
+          sx={{ display: "flex", gap: 2 }}
+        >
+          <Link
+            href="https://www.rescuetablet.de/index.php/impressum"
+            color="inherit"
+          >
+            Impressum
+          </Link>
+          <Link
+            href="https://www.rescuetablet.de/index.php/datenschutzerklaerung"
+            color="inherit"
+          >
+            Datenschutz
+          </Link>
+        </Box>
       </Container>
     </>
   );

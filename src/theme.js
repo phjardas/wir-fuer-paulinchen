@@ -1,15 +1,12 @@
 import {
   createTheme,
   CssBaseline,
-  darken,
-  GlobalStyles as MuiGlobalStyles,
-  lighten,
   responsiveFontSizes,
   ThemeProvider as MuiThemeProvider,
   useMediaQuery,
 } from "@mui/material";
-import { blueGrey, purple } from "@mui/material/colors";
-import { useCallback, useMemo } from "react";
+import { purple } from "@mui/material/colors";
+import { useMemo } from "react";
 
 export default function ThemeProvider({ children }) {
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
@@ -20,15 +17,19 @@ export default function ThemeProvider({ children }) {
         createTheme({
           palette: {
             mode: prefersDarkMode ? "dark" : "light",
-            primary: blueGrey,
+            primary: { main: "#c00000" },
             secondary: purple,
+            grey: { main: "#f6f7ff" },
+          },
+          typography: {
+            fontFamily: "Krub,Roboto,Helvetica,Arial,sans-serif",
           },
           components: {
             MuiButton: {
               styleOverrides: {
                 root: {
                   textTransform: "initial",
-                  borderRadius: 20,
+                  borderRadius: 5,
                   padding: "6px 20px",
                 },
                 contained: {
@@ -42,7 +43,7 @@ export default function ThemeProvider({ children }) {
               },
               styleOverrides: {
                 root: {
-                  borderRadius: 20,
+                  borderRadius: 5,
                 },
               },
             },
@@ -72,27 +73,8 @@ export default function ThemeProvider({ children }) {
     <MuiThemeProvider theme={theme}>
       <>
         <CssBaseline />
-        <GlobalStyles />
         {children}
       </>
     </MuiThemeProvider>
   );
-}
-
-export function lightenColor(theme, color, coefficient) {
-  const fn = theme.palette.mode === "dark" ? darken : lighten;
-  return fn(color, coefficient);
-}
-
-function GlobalStyles() {
-  const styles = useCallback(
-    (theme) => ({
-      body: {
-        backgroundColor: lightenColor(theme, theme.palette.primary.light, 0.8),
-      },
-    }),
-    []
-  );
-
-  return <MuiGlobalStyles styles={styles} />;
 }

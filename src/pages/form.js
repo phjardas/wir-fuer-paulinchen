@@ -2,10 +2,8 @@ import { Send, VolunteerActivism } from "@mui/icons-material";
 import { LoadingButton } from "@mui/lab";
 import {
   Alert,
+  Box,
   Button,
-  Card,
-  CardActions,
-  CardContent,
   InputAdornment,
   MenuItem,
   Stack,
@@ -24,13 +22,22 @@ const events = [
   "Dritte Veranstaltung",
 ];
 
+yup.setLocale({
+  mixed: {
+    required: "Bitte füllen Sie dieses Feld aus.",
+  },
+  string: {
+    email: "Bitte geben Sie eine gültige E-Mail-Adresse ein.",
+  },
+});
+
 const schema = yup.object({
   firstName: yup.string().required(),
   lastName: yup.string().required(),
   email: yup.string().email().required(),
   phone: yup.string(),
   event: yup.string().oneOf(events).required(),
-  amount: yup.number().min(1).integer().required(),
+  amount: yup.number().integer().required(),
 });
 
 const initialValues = {
@@ -46,25 +53,21 @@ export default function FormPage() {
   const [submitted, setSubmitted] = useState(false);
 
   return submitted ? (
-    <Success reset={() => setSubmitted(false)} />
+    <Success />
   ) : (
     <Entry onSubmitted={() => setSubmitted(true)} />
   );
 }
 
-function Success({ reset }) {
+function Success() {
   return (
-    <Card>
-      <CardContent>
-        <Stack spacing={3} sx={{ alignItems: "center" }}>
-          <VolunteerActivism sx={{ fontSize: "5rem", color: "primary.main" }} />
-          <Typography variant="h4">Vielen Dank für deine Teilnahme!</Typography>
-          <Button variant="contained" onClick={reset}>
-            Weiter
-          </Button>
-        </Stack>
-      </CardContent>
-    </Card>
+    <Stack spacing={3} sx={{ alignItems: "center" }}>
+      <VolunteerActivism sx={{ fontSize: "5rem", color: "primary.main" }} />
+      <Typography variant="h4">Vielen Dank für deine Teilnahme!</Typography>
+      <Button variant="contained" href="https://wir-fuer-paulinchen.de/">
+        Zurück
+      </Button>
+    </Stack>
   );
 }
 
@@ -88,103 +91,114 @@ function Entry({ onSubmitted }) {
   );
 
   return (
-    <Card>
-      <Formik
-        initialValues={initialValues}
-        validationSchema={schema}
-        onSubmit={onSubmit}
-        validateOnMount
-      >
-        {({ isSubmitting, isValid, status }) => (
-          <Form noValidate autoComplete="off">
-            <CardContent>
-              <Stack
-                component="fieldset"
-                spacing={3}
-                sx={{ m: 0, p: 0, border: "none" }}
-                disabled={isSubmitting}
-              >
-                <Typography>
-                  Schön dass du bei unserem Gewinnspiel teilnimmst!
-                  Blablabla&hellip;
-                </Typography>
-                <Field
-                  name="firstName"
-                  label="Vorname"
-                  component={TextField}
-                  fullWidth
-                  required
-                />
-                <Field
-                  name="lastName"
-                  label="Nachname"
-                  component={TextField}
-                  fullWidth
-                  required
-                />
-                <Field
-                  name="email"
-                  label="E-Mail-Adresse"
-                  type="email"
-                  component={TextField}
-                  fullWidth
-                  required
-                />
-                <Field
-                  name="phone"
-                  label="Telefonnummer"
-                  type="phone"
-                  component={TextField}
-                  fullWidth
-                />
-                <Field
-                  name="event"
-                  label="Veranstaltung"
-                  component={Select}
-                  fullWidth
-                  required
-                >
-                  {events.map((event) => (
-                    <MenuItem value={event} key={event}>
-                      {event}
-                    </MenuItem>
-                  ))}
-                </Field>
-                <Field
-                  name="amount"
-                  label="Spendenbetrag"
-                  type="number"
-                  min="1"
-                  step="1"
-                  component={TextField}
-                  fullWidth
-                  required
-                  helperText="Bitte nur ganzzahlige Beträge"
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">€</InputAdornment>
-                    ),
-                  }}
-                />
-              </Stack>
-            </CardContent>
-            {status && <Alert severity="error">{status.message}</Alert>}
-            <CardActions>
-              <LoadingButton
-                type="submit"
-                variant="contained"
-                startIcon={<Send />}
-                loading={isSubmitting}
-                loadingPosition="start"
-                disabled={!isValid}
-              >
-                Am Gewinnspiel teilnehmen
-              </LoadingButton>
-              <Button type="reset">Formular zurücksetzen</Button>
-            </CardActions>
-          </Form>
-        )}
-      </Formik>
-    </Card>
+    <Formik
+      initialValues={initialValues}
+      validationSchema={schema}
+      onSubmit={onSubmit}
+      validateOnMount
+    >
+      {({ isSubmitting, isValid, status, values }) => (
+        <Form autoComplete="off">
+          <Stack
+            component="fieldset"
+            spacing={3}
+            sx={{ m: 0, p: 0, border: "none" }}
+            disabled={isSubmitting}
+          >
+            <Typography variant="h5">
+              Gewinne einen original Amerikanischen Feuerwehrhelm des Typs
+              Bullard UST – Sondermodell “Never Forget 9/11”
+            </Typography>
+            <Typography>
+              Schon mit einem Loskauf ab € 2 kommt dein Los in den großen
+              Lostopf und hat die Chance auf den Gewinn dieses Sondermodells des
+              Bullard UST, das den 343 verstorbenen Feuerwehrleuten des
+              Einsatzes der Terroranschläge am 11. September 2001 gewidmet ist.
+              Bei höheren Beträgen erhöht sich die Anzahl der Lose entsprechend
+              des Betrages je zwei Euro (€ 10 = 5 Lose, € 30 = 15 Lose, etc.).
+            </Typography>
+            <Typography>
+              Alle Einnahmen der Aktion gehen 100% zu Gunsten von „Paulinchen –
+              Initiative für brandverletzte Kinder e.V.“!
+            </Typography>
+            <Field
+              name="firstName"
+              label="Vorname"
+              component={TextField}
+              fullWidth
+              required
+            />
+            <Field
+              name="lastName"
+              label="Nachname"
+              component={TextField}
+              fullWidth
+              required
+            />
+            <Field
+              name="email"
+              label="E-Mail-Adresse"
+              type="email"
+              component={TextField}
+              fullWidth
+              required
+            />
+            <Field
+              name="phone"
+              label="Telefonnummer"
+              type="phone"
+              component={TextField}
+              fullWidth
+            />
+            <Field
+              name="event"
+              label="Veranstaltung"
+              component={Select}
+              fullWidth
+              required
+            >
+              {events.map((event) => (
+                <MenuItem value={event} key={event}>
+                  {event}
+                </MenuItem>
+              ))}
+            </Field>
+            <Field
+              name="amount"
+              label="Spendenbetrag"
+              type="number"
+              component={TextField}
+              fullWidth
+              required
+              helperText={
+                values.amount
+                  ? `Entspricht ${Math.floor(values.amount / 2)} Losen`
+                  : undefined
+              }
+              inputProps={{ min: 2, step: 1 }}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">€</InputAdornment>
+                ),
+              }}
+            />
+          </Stack>
+          {status && <Alert severity="error">{status.message}</Alert>}
+          <Box sx={{ py: 2 }}>
+            <LoadingButton
+              type="submit"
+              variant="contained"
+              startIcon={<Send />}
+              loading={isSubmitting}
+              loadingPosition="start"
+              disabled={!isValid}
+            >
+              Am Gewinnspiel teilnehmen
+            </LoadingButton>
+            <Button type="reset">Formular zurücksetzen</Button>
+          </Box>
+        </Form>
+      )}
+    </Formik>
   );
 }

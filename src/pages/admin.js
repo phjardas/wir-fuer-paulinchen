@@ -2,8 +2,6 @@ import { Check, Close } from "@mui/icons-material";
 import {
   Alert,
   Avatar,
-  Card,
-  CardHeader,
   IconButton,
   Link,
   List,
@@ -57,22 +55,19 @@ function Admin() {
 
 function Submissions({ submissions }) {
   return (
-    <Card>
-      <CardHeader
-        title={<>{submissions.length} Teilnehmer</>}
-        subheader={
-          <>
-            Gesamtbetrag: €{" "}
-            {submissions.reduce((a, b) => a + b.amount, 0).toLocaleString()}
-          </>
-        }
-      />
+    <>
+      <Typography variant="h5">{submissions.length} Teilnehmer</Typography>
+      <Typography>
+        Gesamtbetrag: €{" "}
+        {submissions.reduce((a, b) => a + b.amount, 0).toLocaleString()}
+      </Typography>
       <List>
         {submissions.map((sub, i) => (
           <ListItem
             key={sub.id}
             secondaryAction={<SubmissionActions submission={sub} />}
             divider={i < submissions.length - 1}
+            disableGutters
           >
             <Stack spacing={1}>
               <Typography variant="h6">
@@ -94,7 +89,7 @@ function Submissions({ submissions }) {
           </ListItem>
         ))}
       </List>
-    </Card>
+    </>
   );
 }
 
